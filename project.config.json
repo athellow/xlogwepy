@@ -1,0 +1,13 @@
+{
+  "description": "A WePY project",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "appid": "wx3a32c591bbd7420f",
+  "projectname": "xlog.dev",
+  "miniprogramRoot": "./weapp"
+}
