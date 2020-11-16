@@ -37,5 +37,9 @@
     "less": "^3.8.1",
     "@wepy/compiler-babel": "^2.0.1",
     "@wepy/compiler-less": "^2.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/athellow/xlogwepy.git"
   }
 }
