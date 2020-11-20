@@ -1,21 +1,4 @@
 <style lang="less">
-  .userinfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .userinfo-avatar {
-    width: 128rpx;
-    height: 128rpx;
-    margin: 20rpx;
-    border-radius: 50%;
-  }
-
-  .userinfo-nickname {
-    color: #aaa;
-  }
-
   .usermotto {
     margin-top: 200px;
     font-weight: bold;
@@ -24,13 +7,7 @@
 </style>
 <template>
   <view class="container">
-    <view class="userinfo">
-      <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
+    <avatar :userInfo.sync="userInfo" :hasUserInfo.sync="hasUserInfo" :canIUse.sync="canIUse"/>
     <view class="usermotto">
       <text class="user-motto">{{motto}}</text>
     </view>
@@ -39,35 +16,10 @@
 
 <script>
   import wepy from '@wepy/core'
-  import eventHub from '../common/eventHub';
   import { mapState } from '@wepy/x';
-  import store from '../store';
-  import testMixin from '../mixins/test'
 
-  //获取应用实例
   const app = getApp()
   wepy.page({
-    store,
-    config: {
-      navigationBarTitleText: 'test'
-    },
-
-    hooks: {
-      // Page 级别 hook, 只对当前 Page 的 setData 生效。
-      'before-setData': function (dirty) {
-        if (Math.random() < 0.2) {
-          console.log('setData canceled');
-          return false; // Cancel setData
-        }
-        dirty.time = +new Date();
-        return dirty;
-      }
-    },
-
- 
-
-    mixins: [testMixin],
-
     data: {
       motto: '哈喽日记',
       userInfo: {},
@@ -75,12 +27,6 @@
       canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
 
-    //事件处理函数
-    bindViewTap: function() {
-      wx.navigateTo({
-        url: `/pages/logs`
-      })
-    },
     onLoad: function () {
       if (app.userInfo) {
         this.userInfo =  app.userInfo,
@@ -113,26 +59,17 @@
         path: '/pages/index'
       }
     },
-    
+
     methods: {
-      getUserInfo (e) {
-        console.log(e)
-        app.userInfo = e.$wx.detail.userInfo
-        this.userInfo = e.$wx.detail.userInfo,
-        this.hasUserInfo = true
-      }
+      
     }
-    
   });
 </script>
 <config>
 {
     navigationBarTitleText: '哈喽日记',
     usingComponents: {
-      panel: '~@/components/panel',
-      counter: '~counter',
-      list: '../components/list',
-      group: '../components/group',
+      avatar: '../components/avatar',
       "slide-view": "module:miniprogram-slide-view",
     }
 }

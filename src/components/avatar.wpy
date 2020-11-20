@@ -1,0 +1,59 @@
+<style lang="less">
+  .userinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .userinfo-avatar {
+    width: 128rpx;
+    height: 128rpx;
+    margin: 20rpx;
+    border-radius: 50%;
+  }
+
+  .userinfo-nickname {
+    color: #aaa;
+  }
+</style>
+<template>
+  <view class="container">
+    <view class="userinfo">
+      <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+      <block wx:else>
+        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+
+  //获取应用实例
+  const app = getApp()
+  wepy.component({
+    props: {
+      userInfo: {},
+      hasUserInfo: Boolean,
+      canIUse: Boolean
+    },
+
+    //事件处理函数
+    bindViewTap: function() {
+      wx.navigateTo({
+        url: `/pages/logs`
+      })
+    },
+
+    methods: {
+      getUserInfo (e) {
+        console.log(e)
+        app.userInfo = e.$wx.detail.userInfo
+        this.userInfo = e.$wx.detail.userInfo,
+        this.hasUserInfo = true
+      }
+    }
+  });
+</script>

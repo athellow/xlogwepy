@@ -1,0 +1,109 @@
+<style lang="less">
+  .container {
+    padding: 0;
+    background: linear-gradient(#fa689a, #fff);
+  }
+  .m2{
+    margin:33rpx auto 44rpx auto;
+    width:645rpx;
+    background: #fff;
+    border-radius: 12rpx;
+  }
+  .m2_tit{
+    font-size:30rpx;
+    color:#000;
+    margin-left:32rpx;
+    padding-top:26rpx;
+    margin-bottom:26rpx;
+  }
+  .coupon-line{
+    position:relative;
+    width:618rpx;
+    margin:auto;
+    border-top:4rpx dashed #aaa;
+  }
+</style>
+<template>
+  <view class="container">
+    <avatar :userInfo.sync="userInfo" :hasUserInfo.sync="hasUserInfo" :canIUse.sync="canIUse"/>
+        
+    <view class="m2">
+      <view @tap="navTo('profile')" class="m2_tit">恋爱资料</view>
+      <view class="coupon-line">
+        <view></view>
+        <view></view>
+      </view>
+      <view @tap="navTo('remember')" class="m2_tit">纪念日</view>
+    </view>
+  </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+
+    //获取应用实例
+    const app = getApp()
+    wepy.page({
+        data: {
+          userInfo: {},
+          hasUserInfo: app.hasUserInfo,
+          canIUse: wx.canIUse('button.open-type.getUserInfo')
+        },
+
+        onLoad: function () {
+          if (app.userInfo) {
+            this.userInfo =  app.userInfo,
+            this.hasUserInfo = true
+          } else if (this.canIUse){
+            // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+            // 所以此处加入 callback 以防止这种情况
+            app.userInfoReadyCallback = res => {
+              this.userInfo = res.userInfo
+              this.hasUserInfo = true
+            }
+          } else {
+            // 在没有 open-type=getUserInfo 版本的兼容处理
+            wx.getUserInfo({
+              success: res => {
+                app.userInfo = res.userInfo
+                this.userInfo = res.userInfo
+                this.hasUserInfo = true
+              }
+            })
+          }
+        },
+
+        onPullDownRefresh: function () {
+          
+        },
+
+        onReachBottom: function () {
+          
+        },
+
+        onShareAppMessage: function () {
+            return {
+                title: '哈喽日记-我们',
+                path: '/pages/we/index'
+            }
+        },
+
+        methods: {
+            navTo(flag) {
+                wx.navigateTo({
+                    url: `/pages/${flag}/index`  // 打开一个新的同路由页面，但指定不同的数据初始值
+                })
+            }
+        }
+        
+    });
+</script>
+<config>
+{
+    navigationBarTitleText: '说说',
+    navigationBarBackgroundColor: '#fa689a',
+    usingComponents: {
+      avatar: '../../components/avatar',
+      "slide-view": "module:miniprogram-slide-view",
+    }
+}
+</config>
