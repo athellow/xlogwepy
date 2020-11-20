@@ -1,5 +1,6 @@
 <style lang="less">
   .container {
+    padding: 0;
     background-color: #eee;
   }
   .title_en {
