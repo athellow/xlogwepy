@@ -69,7 +69,7 @@
     mixins: [testMixin],
 
     data: {
-      motto: '恋爱笔记',
+      motto: '哈喽日记',
       userInfo: {},
       hasUserInfo: false,
       canIUse: wx.canIUse('button.open-type.getUserInfo')

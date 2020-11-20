@@ -86,7 +86,8 @@ wepy.app({
 {
     pages: [
       'pages/index',
-      'pages/say'
+      'pages/post/index',
+      'pages/post/detail'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -101,7 +102,7 @@ wepy.app({
         "text": "首页"
       },
       {
-        "pagePath": "pages/say",
+        "pagePath": "pages/post/index",
         "text": "空间"
       }
     ]
