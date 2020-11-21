@@ -88,7 +88,8 @@ wepy.app({
       'pages/index',
       'pages/post/index',
       'pages/post/detail',
-      'pages/we/index'
+      'pages/we/index',
+      'pages/logs'
     ],
     window: {
       backgroundTextStyle: 'light',

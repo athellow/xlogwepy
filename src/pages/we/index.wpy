@@ -49,7 +49,7 @@
           canIUse: wx.canIUse('button.open-type.getUserInfo')
         },
 
-        onLoad: function () {
+        onShow: function () {
           if (app.userInfo) {
             this.userInfo =  app.userInfo,
             this.hasUserInfo = true

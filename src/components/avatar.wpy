@@ -41,19 +41,21 @@
     },
 
     //事件处理函数
-    bindViewTap: function() {
-      wx.navigateTo({
-        url: `/pages/logs`
-      })
-    },
-
+    
+    
     methods: {
       getUserInfo (e) {
         console.log(e)
         app.userInfo = e.$wx.detail.userInfo
         this.userInfo = e.$wx.detail.userInfo,
         this.hasUserInfo = true
-      }
+      },
+
+      bindViewTap: function(e) {
+        wx.navigateTo({
+          url: `/pages/logs`
+        })
+      },
     }
   });
 </script>
