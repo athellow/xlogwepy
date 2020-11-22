@@ -27,7 +27,7 @@
       canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
 
-    onShow: function () {
+    onLoad: function () {
       if (app.userInfo) {
         this.userInfo =  app.userInfo,
         this.hasUserInfo = true

@@ -3,6 +3,20 @@
     padding: 0;
     background: linear-gradient(#fa689a, #fff);
   }
+  .userinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .userinfo-avatar {
+    width: 128rpx;
+    height: 128rpx;
+    margin: 20rpx;
+    border-radius: 50%;
+  }
+  .userinfo-nickname {
+    color: #aaa;
+  }
   .m2{
     margin:33rpx auto 44rpx auto;
     width:645rpx;
@@ -25,8 +39,10 @@
 </style>
 <template>
   <view class="container">
-    <avatar :userInfo.sync="userInfo" :hasUserInfo.sync="hasUserInfo" :canIUse.sync="canIUse"/>
-        
+    <view class="userinfo" wx:if="{{hasUserInfo}}">
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </view>
     <view class="m2">
       <view @tap="navTo('profile')" class="m2_tit">恋爱资料</view>
       <view class="coupon-line">
