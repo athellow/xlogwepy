@@ -5,8 +5,21 @@
   }
   .userinfo {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    width:645rpx;
+  }
+  .avatar-box {
+    display: flex;
+    flex-direction: column;
+    margin:2px;
+    width: 30%;
+  }
+  .text-box {
+    display: flex;
+    flex-direction: column;
+    margin:2px;
+    width: 70%;
   }
   .userinfo-avatar {
     width: 128rpx;
@@ -14,8 +27,16 @@
     margin: 20rpx;
     border-radius: 50%;
   }
+  .userinfo-button {
+    background-color: transparent;
+    padding-left: 0;
+    text-align: left;
+    width: 50%;
+    color: #333;
+  }
   .userinfo-nickname {
-    color: #aaa;
+    color: #333;
+    font-weight: bold;
   }
   .m2{
     margin:33rpx auto 44rpx auto;
@@ -39,9 +60,14 @@
 </style>
 <template>
   <view class="container">
-    <view class="userinfo" wx:if="{{hasUserInfo}}">
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    <view class="userinfo">
+      <view class="avatar-box">
+        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      </view>
+      <view class="text-box">
+        <button wx:if="{{!hasUserInfo && canIUse}}" class="userinfo-button" open-type="getUserInfo" bindgetuserinfo="getUserInfo">点击登录</button>
+        <text class="userinfo-nickname" wx:else>{{userInfo.nickName}}</text>
+      </view>
     </view>
     <view class="m2">
       <view @tap="navTo('profile')" class="m2_tit">恋爱资料</view>
@@ -60,7 +86,7 @@
     const app = getApp()
     wepy.page({
         data: {
-          userInfo: {},
+          userInfo: {"avatarUrl": "../../static/images/avatar001.jpg"},
           hasUserInfo: app.hasUserInfo,
           canIUse: wx.canIUse('button.open-type.getUserInfo')
         },
@@ -108,6 +134,17 @@
                 wx.navigateTo({
                     url: `/pages/${flag}/index`  // 打开一个新的同路由页面，但指定不同的数据初始值
                 })
+            },
+            getUserInfo (e) {
+              console.log(e)
+              app.userInfo = e.$wx.detail.userInfo
+              this.userInfo = e.$wx.detail.userInfo,
+              this.hasUserInfo = true
+            },
+            bindViewTap: function(e) {
+              wx.navigateTo({
+                url: `/pages/logs`
+              })
             }
         }
         

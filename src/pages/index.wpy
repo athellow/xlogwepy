@@ -22,7 +22,7 @@
   wepy.page({
     data: {
       motto: '哈喽日记',
-      userInfo: {},
+      userInfo: {"avatarUrl": "../static/images/avatar001.jpg"},
       hasUserInfo: false,
       canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
