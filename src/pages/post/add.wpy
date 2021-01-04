@@ -1,0 +1,216 @@
+<style lang="less">
+  .container {
+    padding: 20px;
+  }
+  .text{
+    width: 100%;
+    background-color: #eee;
+    padding: 5px;
+    height: 100px;
+    margin-bottom: 10px
+  }
+  .image_content{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .image{
+    position: relative;
+    width:33%;
+    height: 100px;
+  }
+  .moment_img{
+    width: 99%;
+    height: 98px;
+    padding: 2px;
+  }
+  .img_x{
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+  
+  button{
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
+  }
+  .button-area{
+    margin: 0 auto;
+    position:fixed;
+    width: 100%;
+    bottom:0;
+  }
+</style>
+<template>
+  <view class="container">
+    <textarea bindinput="input" class="text" maxlength="-1" placeholder="请输入内容"></textarea>
+    <view class="image_content">
+      <!-- 判断chooseImageUrl如果没有就不加载本模块，这是前面显示上传的图片的模块。 -->
+      <view wx:for="{{chooseImageUrl}}" wx:key="{{key}}" class="image">
+        <image class="moment_img" src="{{item}}" ></image>
+        <text class="img_x" data-index="{{index}}" @tap="Close"> X</text>
+        <!-- data-index="{{index}}"之定义属性，后面删除图片的时候需要用到它 -->
+      </view>
+      
+      <!-- 加号的框  chooseImageUrl.length当超过九张的时候就不在显示 -->
+      <view wx:if="{{chooseImageUrl.length<9}}" class="image" style="cursor: pointer;" @tap="chooseimage()">
+        <image class="moment_img" src="{{chImgUrl}}" ></image>
+      </view>
+    </view>
+    <view class="button-area">
+      <button @tap="send" type="primary" plain="true">发布</button>
+    </view>
+  </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+
+    var imgArr = [];          //这个数组用来临时存储图片数据
+    wepy.page({
+        config: {
+            navigationBarTitleText: '哈喽日记',
+            window: {
+                enablePullDownRefresh: true
+            }
+        },
+
+        data: {
+            chImgUrl: '../../static/images/choose.png',
+            latitude: '',
+            chooseImageUrl: [],   //绑定到页面的数据
+            imgCount: 0,          //图片的张数
+            content:''
+        },
+
+        onShareAppMessage: function () {
+            return {
+                title: '哈喽日记',
+                path: '/pages/post/index'
+            }
+        },
+
+        methods: {
+          input(e) {
+            this.content = e.$wx.detail.value
+            // console.log(e.$wx);
+          },
+
+          chooseimage() {
+            var that = this
+            var attach = []
+            wx.chooseImage({
+              sourceType: ['album', 'camera'],                  // 可以指定来源是相册还是相机，默认二者都有
+              sizeType: ['original'],             // 可以指定是原图还是压缩图，默认二者都有 compressed
+              count: 9,
+              success: function (res) {
+                var tempFilePaths = res.tempFilePaths;
+                var len = that.imgCount + tempFilePaths.length
+
+                if (len > 9) {
+                  wx.showToast({
+                    title: '最大数量为9',
+                    icon: 'loading',
+                    duration: 1000
+                  })
+
+                  return false
+                }
+
+                for (var i = 0; i < tempFilePaths.length;i++) {
+                  // 将api 返回的图片数组push进一开始的imgArr，一定要循环一个个添加，因为用户上传多张图直接push就会多个路径在imgArr的同一个元素里。报错
+                  imgArr.push(tempFilePaths[i]);
+                }
+
+                // 将此时的图片长度和存放路径的数组加到要渲染的数据中
+                that.imgCount = len
+                that.chooseImageUrl = imgArr
+              }
+            })
+          },
+
+          Close(e) {
+              var mylen = this.chooseImageUrl.length;    //当前渲染的数组长度
+              var myindex = e.currentTarget.dataset.index;    //当前点击的是第几张图片 data-index
+              imgArr.splice(myindex,1)                        //将这张图充存放图片的数组中删除
+
+              this.imgCount = mylen - 1
+              this.chooseImageUrl = imgArr
+          },
+
+          send() {
+            var that = this;
+            var user_id = wx.getStorageSync('userid')
+            wx.showLoading({
+              title: '上传中',
+            })
+
+            that.img_upload()
+          },
+
+          img_upload() {
+            var that = this;
+            var img_url = that.chooseImageUrl;
+            var img_url_ok = [];
+
+            var userid = wx.getStorageSync('userid');
+            var content = that.content;
+
+            //由于图片只能一张一张地上传，所以用循环
+            for (var i = 0; i < img_url.length; i++) {
+              wx.uploadFile({
+                url: 'https://athello.cn/api/v1/upload/do',
+                filePath: img_url[i],
+                name: 'file',
+                formData: {
+                  'user': 'test'
+                },
+                success: function (res) {
+                  console.log('上传成功');
+                  img_url_ok.push(res.data) //把上传成功的图片的地址放入数组中
+                  //如果全部传完，则可以将图片路径保存到数据库
+                  if (img_url_ok.length == img_url.length) {
+                    wx.request({
+                      url: 'https://athello.cn/api/v1/posts/create',
+                      data: {
+                        user_id: userid,
+                        images: img_url_ok,
+                        content: content,
+                      },
+                      success: function (res) {
+                        if (res.data.status == 1) {
+                          wx.hideLoading()
+                          wx.showModal({
+                            title: '提交成功',
+                            showCancel: false,
+                            success: function (res) {
+                              if (res.confirm) {
+                                wx.navigateTo({
+                                  url: '/pages/post/index',
+                                })
+                              }
+                            }
+                          })
+                        }
+                      }
+                    })
+                  }
+                },
+                fail: function (res) {
+                  console.log('上传失败')
+                }
+              })
+            }
+          }
+        }
+    });
+</script>
+<config>
+{
+    navigationBarTitleText: '说说',
+    usingComponents: {
+      "slide-view": "module:miniprogram-slide-view",
+    }
+}
+</config>

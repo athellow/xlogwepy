@@ -88,6 +88,7 @@ wepy.app({
       'pages/index',
       'pages/post/index',
       'pages/post/detail',
+      'pages/post/add',
       'pages/we/index',
       'pages/logs'
     ],

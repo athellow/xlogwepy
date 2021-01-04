@@ -41,6 +41,16 @@
       height: 70rpx;
     }
   }
+  button{
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
+  }
+  .button-sp-area{
+    margin: 0 auto;
+    width: 60%;
+    position:fixed;
+    bottom:0;
+  }
 </style>
 <template>
   <view class="container">
@@ -53,6 +63,9 @@
     </view>
     <text class="info" wx:if="{{info}}">{{info}}</text>
     <!-- <image wx:else class="info loading" src="../../resources/assets/loading.gif"/> -->
+    <view class="button-sp-area">
+      <button @tap="add()" type="primary" plain="true">写日记</button>
+    </view>
   </view>
 </template>
 <script>
@@ -127,6 +140,12 @@
                         // this.$apply()
                         wx.hideLoading()
                     }
+                })
+            },
+
+            add() {
+                wx.navigateTo({
+                    url: `/pages/post/add`
                 })
             }
         }
