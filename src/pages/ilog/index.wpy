@@ -1,0 +1,135 @@
+<style lang="less">
+  .container {
+    padding: 0;
+    background-color: #eee;
+  }
+  .cards-area {
+    margin-top: 30rpx;
+    width: 100%;
+  }
+  .info{
+    color:gray;
+    opacity:.8;
+    margin-bottom: 20rpx;
+    &.loading{
+      width: 70rpx;
+      height: 70rpx;
+    }
+  }
+  button{
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
+  }
+  .button-sp-area{
+    margin: 0 auto;
+    position:fixed;
+    bottom:0;
+  }
+</style>
+<template>
+  <view class="container">
+    <view class="cards-area">
+      <view wx:for="{{ilogs}}">
+        <view wx:if="{{item.id}}">
+          <ilog-card :user_name="userInfo.nickName" :avatar="userInfo.avatarUrl" :date="item.published_at" :praise_num="item.praise_num" :content="item.content" :images="item.images"/>
+        </view>
+      </view>
+    </view>
+    <text class="info" wx:if="{{info}}">{{info}}</text>
+    <!-- <image wx:else class="info loading" src="../../resources/assets/loading.gif"/> -->
+    <view class="button-sp-area">
+      <button @tap="add()" class="mini-btn" type="primary" size="mini">+</button>
+    </view>
+  </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+
+    const app = getApp()
+    wepy.page({
+        config: {
+            navigationBarTitleText: '哈喽日记',
+            window: {
+                enablePullDownRefresh: true
+            }
+        },
+
+        data: {
+            userInfo: {"nickName": "", "avatarUrl": "../static/images/avatar001.jpg"},
+            ilogs: [],
+            isLoadingMore: false,
+            currentPage: 1,
+            info: ''
+        },
+
+        onLoad: function () {
+          // if (app.$wepy) {
+          //   this.userInfo = app.$wepy.userInfo
+          // }
+          wx.showLoading({
+              title: '加载中'
+          })
+          this.loadList()
+        },
+
+        onPullDownRefresh: function () {
+            wx.stopPullDownRefresh()
+        },
+
+        onReachBottom: function () {
+            this.currentPage++
+            if (this.currentPage >= 20) { // 最多只能加载20页
+                this.isLoadingMore = false
+                this.info = '没有更多文章了'
+                // this.$apply()
+                return
+            }
+            this.isLoadingMore = true
+            this.loadList()
+        },
+
+        onShareAppMessage: function () {
+            return {
+                title: '哈喽日记',
+                path: '/pages/ilog/index'
+            }
+        },
+
+        methods: {
+            loadList: function () {
+              wx.request({
+                url: `https://athello.cn/api/v1/ilogs?page=${this.currentPage}`,
+                success: (res) => {
+                  if (res.data.status === 0) {
+                    if (res.data.data.length == 0) {
+                      this.isLoadingMore = false
+                      this.info = '没有更多动态了'
+                    }
+                    this.ilogs = this.ilogs.concat(res.data.data)
+                  } else {
+                    this.info = '加载动态列表失败，请重试'
+                  }
+                  // this.$apply()
+                  wx.hideLoading()
+                }
+              })
+            },
+
+            add() {
+                wx.navigateTo({
+                    url: `/pages/ilog/add`
+                })
+            }
+        }
+        
+    });
+</script>
+<config>
+{
+    navigationBarTitleText: '说说',
+    usingComponents: {
+      "ilog-card": '../../components/ilog-card',
+      "slide-view": "module:miniprogram-slide-view",
+    }
+}
+</config>

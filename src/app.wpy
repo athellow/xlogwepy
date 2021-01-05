@@ -89,6 +89,8 @@ wepy.app({
       'pages/post/index',
       'pages/post/detail',
       'pages/post/add',
+      'pages/ilog/index',
+      'pages/ilog/add',
       'pages/we/index',
       'pages/logs'
     ],
@@ -103,10 +105,6 @@ wepy.app({
       {
         "pagePath": "pages/index",
         "text": "首页"
-      },
-      {
-        "pagePath": "pages/post/index",
-        "text": "空间"
       },
       {
         "pagePath": "pages/we/index",

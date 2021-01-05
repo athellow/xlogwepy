@@ -70,7 +70,11 @@
       </view>
     </view>
     <view class="m2">
-      <view @tap="navTo('profile')" class="m2_tit">恋爱资料</view>
+      <view @tap="navTo('ilog')" class="m2_tit">日常动态</view>
+      <view class="coupon-line">
+        <view></view>
+        <view></view>
+      </view><view @tap="navTo('profile')" class="m2_tit">恋爱资料</view>
       <view class="coupon-line">
         <view></view>
         <view></view>
@@ -91,8 +95,12 @@
           canIUse: wx.canIUse('button.open-type.getUserInfo')
         },
 
-        onShow: function () {
-          if (app.userInfo) {
+        onLoad: function () {
+          if (app.$wepy) {
+            app.userInfo = app.$wepy.userInfo
+            this.userInfo = app.$wepy.userInfo
+            this.hasUserInfo = true
+          } else if (app.userInfo) {
             this.userInfo =  app.userInfo,
             this.hasUserInfo = true
           } else if (this.canIUse){
