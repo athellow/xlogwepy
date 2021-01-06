@@ -34,21 +34,15 @@
       if (userId == '') {
         app.$wepy.userLogin().then(res => {
           if (res.status == 0) {
-            userId = res.data.user_id;
+            this.userInfo =  res.data
+            this.hasUserInfo = true
           }
         })
       } else {
-
-      }
-
-      if (app.userInfo) {
-        this.userInfo =  app.userInfo
-        this.hasUserInfo = true
-      } else {
-        app.$wepy.getWechatUserInfo().then(res => {
-          this.userInfo =  res.userInfo
+        if (app.userInfo) {
+          this.userInfo =  app.userInfo
           this.hasUserInfo = true
-        })
+        }
       }
       
       // if (app.userInfo) {

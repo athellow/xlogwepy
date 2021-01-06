@@ -44,7 +44,7 @@
 </style>
 <template>
   <view class="container">
-    <textarea bindinput="input" class="text" maxlength="-1" placeholder="记录这一刻的美好... ..."></textarea>
+    <textarea bindinput="input" class="text" maxlength="-1" placeholder="记录这一刻的美好......"></textarea>
     <view class="image_content">
       <!-- 判断chooseImageUrl如果没有就不加载本模块，这是前面显示上传的图片的模块。 -->
       <view wx:for="{{chooseImageUrl}}" wx:key="{{key}}" class="image">
@@ -153,7 +153,7 @@
             var img_url = that.chooseImageUrl;
             var img_url_ok = [];
 
-            var userid = wx.getStorageSync('userId') || 1;
+            var userid = wx.getStorageSync('userId');
             var content = that.content;
 
             //由于图片只能一张一张地上传，所以用循环
