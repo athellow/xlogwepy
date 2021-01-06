@@ -140,7 +140,6 @@
 
           send() {
             var that = this;
-            var user_id = wx.getStorageSync('userid')
             wx.showLoading({
               title: '上传中',
             })
@@ -206,12 +205,20 @@
                       },
                       fail: function (res) {
                         console.log(res)
+                        wx.showModal({
+                          title: 'fail',
+                          showCancel: false
+                        })
                       }
                     })
                   }
                 },
                 fail: function (res) {
                   console.log('上传失败')
+                  wx.showModal({
+                    title: '上传失败',
+                    showCancel: false
+                  })
                 }
               })
             }
