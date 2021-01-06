@@ -28,10 +28,7 @@
     },
 
     onLoad: function () {
-      var that = this; 
-      var userId = wx.getStorageSync("userId");
-      
-      if (userId == '') {
+      if (this.hasUserInfo == false) {
         app.$wepy.userLogin().then(res => {
           if (res.status == 0) {
             this.userInfo =  res.data

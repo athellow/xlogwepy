@@ -145,6 +145,8 @@
             })
 
             that.img_upload()
+
+            wx.hideLoading()
           },
 
           img_upload() {
@@ -155,6 +157,12 @@
             var userid = wx.getStorageSync('userId');
             var content = that.content;
 
+            if (img_url.length == 0) {
+              wx.showModal({
+                title: '请选择照片',
+                showCancel: false
+              })
+            }
             //由于图片只能一张一张地上传，所以用循环
             for (var i = 0; i < img_url.length; i++) {
               wx.uploadFile({
@@ -183,7 +191,7 @@
                         content: content,
                       },
                       success: function (res) {
-                        wx.hideLoading()
+                        
                         if (res.data.status == 0) {
                           wx.showModal({
                             title: '提交成功',

@@ -107,7 +107,7 @@ wepy.app({
                             } else {
                               reject('error');
                               wx.showToast({
-                                title: 'error''
+                                title: 'error'
                               })
                             }
                           },

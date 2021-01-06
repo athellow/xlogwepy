@@ -54,6 +54,12 @@
         app.userInfo = e.$wx.detail.userInfo
         this.userInfo = e.$wx.detail.userInfo,
         this.hasUserInfo = true
+        app.$wepy.userLogin().then(res => {
+          if (res.status == 0) {
+            // this.userInfo =  res.data
+            // this.hasUserInfo = true
+          }
+        })
       },
 
       bindViewTap: function(e) {
