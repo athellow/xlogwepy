@@ -1,7 +1,7 @@
 <style lang="less">
   .usermotto {
     margin-top: 200px;
-    font-weight: bold;
+    // font-weight: bold;
     font-size: large;
   }
 </style>
@@ -28,26 +28,49 @@
     },
 
     onLoad: function () {
-      if (app.userInfo) {
-        this.userInfo =  app.userInfo,
-        this.hasUserInfo = true
-      } else if (this.canIUse){
-        // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-        // 所以此处加入 callback 以防止这种情况
-        app.userInfoReadyCallback = res => {
-          this.userInfo = res.userInfo
-          this.hasUserInfo = true
-        }
-      } else {
-        // 在没有 open-type=getUserInfo 版本的兼容处理
-        wx.getUserInfo({
-          success: res => {
-            app.userInfo = res.userInfo
-            this.userInfo = res.userInfo
-            this.hasUserInfo = true
+      var that = this;
+      var userId = wx.getStorageSync("userId");
+      
+      if (userId == '') {
+        app.$wepy.userLogin().then(res => {
+          if (res.status == 0) {
+            userId = res.data.user_id;
           }
         })
+      } else {
+
       }
+
+      if (app.userInfo) {
+        this.userInfo =  app.userInfo
+        this.hasUserInfo = true
+      } else {
+        app.$wepy.getWechatUserInfo().then(res => {
+          this.userInfo =  res.userInfo
+          this.hasUserInfo = true
+        })
+      }
+      
+      // if (app.userInfo) {
+      //   this.userInfo =  app.userInfo
+      //   this.hasUserInfo = true
+      // } else if (this.canIUse){
+      //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      //   // 所以此处加入 callback 以防止这种情况
+      //   app.userInfoReadyCallback = res => {
+      //     this.userInfo = res.userInfo
+      //     this.hasUserInfo = true
+      //   }
+      // } else {
+      //   // 在没有 open-type=getUserInfo 版本的兼容处理
+      //   wx.getUserInfo({
+      //     success: res => {
+      //       app.userInfo = res.userInfo
+      //       this.userInfo = res.userInfo
+      //       this.hasUserInfo = true
+      //     }
+      //   })
+      // }
     },
 
       /**

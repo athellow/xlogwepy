@@ -16,16 +16,50 @@
         margin-bottom: 30rpx;
         overflow: hidden;
         color: #333;
-        .title {
-            font-size: 10px;
-            -webkit-line-clamp: 2;
-            line-height: 1.2;
-            overflow: hidden;
+        .head-area {
+            display: flex;
+            flex-direction: row;
             color: #666;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            margin-bottom: 15rpx;
+            .box {
+                display: flex;
+                flex-direction: column;
+                .userinfo-avatar {
+                    width: 90rpx;
+                    height: 90rpx;
+                    border-radius: 50%;
+                }
+                .title {
+                    font-size: 10pt;
+                    margin: 10rpx 0 0 20rpx;
+                    -webkit-line-clamp: 2;
+                    line-height: 1.2;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+                .info-area {
+                    font-size: 9pt;
+                    margin: 10rpx 0 0 20rpx;
+                    opacity: .8;
+                    font-family: 'iconfont';
+                    .posted-date {
+                        &:before {
+                            content: '\e64e';
+                            margin-right: 10rpx;
+                        }
+                    }
+                    .views {
+                        margin-left: 30rpx;
+                        &:before {
+                            content: '\e666';
+                            margin-right: 10rpx;
+                        }
+                    }
+                }
+            }
         }
         .content-area {
             display: -webkit-box;
@@ -33,8 +67,8 @@
             -webkit-box-flex: 1;
             .card-content {
                 line-height: 1.3;
-                font-size: 14px;
-                margin: 10rpx 0;
+                font-size: 12pt;
+                margin: 12rpx 0;
                 font-family: HelveticaNeue-Light;
                 overflow: hidden;
                 color: #333;
@@ -47,7 +81,7 @@
                 width: 100%;
                 display: flex;
                 flex-wrap: wrap;
-                margin-bottom: 20px;
+                margin: 10rpx 0;
                 .image{
                     position: relative;
                     width:33%;
@@ -59,44 +93,29 @@
                     padding: 2px;
                 }
             }
-            
-            .info-area {
-                font-size: 10pt;
-                color: #666;
-                opacity: .8;
-                font-family: 'iconfont';
-                .posted-date {
-                    &:before {
-                        content: '\e64e';
-                        margin-right: 10rpx;
-                    }
-                }
-                .views {
-                    margin-left: 30rpx;
-                    &:before {
-                        content: '\e666';
-                        margin-right: 10rpx;
-                    }
-                }
-            }
         }
     }
-
 </style>
 <template>
     <view class="card">
-        <!-- <image class="moment-img" src="{{avatar}}" ></image> -->
-        <text class="title">{{user_name}}</text>
+        <view class="head-area">
+            <view class="box">
+                <image class="userinfo-avatar" src="{{avatar}}" mode="cover"></image>
+            </view>
+            <view class="box">
+                <text class="title">{{user_name}}</text>
+                <view class="info-area">
+                    <text class="posted-date">{{date}}</text>
+                    <text class="views">{{praise_num}}</text>
+                </view>
+            </view>
+        </view>
         <view class="content-area">
             <text class="card-content">{{content}}</text>
             <view class="image-area">
                 <view wx:for="{{images}}" wx:key="{{key}}" class="image">
                     <image class="moment-img" src="{{item}}" ></image>
                 </view>
-            </view>
-            <view class="info-area">
-                <text class="posted-date">{{date}}</text>
-                <text class="views">{{praise_num}}</text>
             </view>
         </view>
     </view>

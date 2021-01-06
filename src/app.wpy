@@ -38,31 +38,31 @@ wepy.app({
     wx.setStorageSync('logs', logs)
 
     // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
+    // wx.login({
+    //   success: res => {
+    //     // 发送 res.code 到后台换取 openId, sessionKey, unionId
+    //   }
+    // })
     // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              // 可以将 res 发送给后台解码出 unionId
-              this.userInfo = res.userInfo
-
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
-                this.userInfoReadyCallback(res)
-              }
-            }
-          })
-        }
-      }
-    })
+    // wx.getSetting({
+    //   success: res => {
+    //     if (res.authSetting['scope.userInfo']) {
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+    //       wx.getUserInfo({
+    //         success: res => {
+    //           // 可以将 res 发送给后台解码出 unionId
+    //           this.userInfo = res.userInfo
+              
+    //           // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+    //           // 所以此处加入 callback 以防止这种情况
+    //           if (this.userInfoReadyCallback) {
+    //             this.userInfoReadyCallback(res)
+    //           }
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
   },
 
   methods: {
@@ -78,6 +78,60 @@ wepy.app({
     async testAsync () {
       let d = await this.sleep(3);
       console.log(d);
+    },
+
+    userLogin () {
+      return new Promise((resolve, reject) => {
+        wx.login({
+          success: res => {
+            // 发送 res.code 到后台换取 openId, sessionKey, unionId
+            if (res.code) {
+              wx.request({
+                url: 'https://athello.cn/api/v1/user',
+                data: {
+                  code: res.code //code凭证
+                },
+                success: res => {
+                  if (res.data.status == 0) {
+                    wx.setStorageSync("userId", res.data.data.user_id);
+                    wx.setStorageSync("loginSessionKey", res.data.data.session_key);
+                    resolve(res.data);  // promise机制放回成功数据
+                  } else {
+                    reject('error');
+                  }
+                },
+                fail: function(res) {
+                  reject(res);
+                  wx.showToast({
+                    title: '系统错误'
+                  })
+                }
+              })
+            } else {
+              reject("error");
+            }
+          }
+        })
+      })
+    },
+
+    getWechatUserInfo () {
+      return new Promise((resolve, reject) => {
+        wx.getSetting({
+          success: res => {
+            if (res.authSetting['scope.userInfo']) {
+              // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+              wx.getUserInfo({
+                success: res => {
+                  // 可以将 res 发送给后台解码出 unionId
+                  this.userInfo = res.userInfo;
+                  resolve(res);
+                }
+              })
+            }
+          }
+        })
+      })
     }
   }
 });
@@ -108,7 +162,7 @@ wepy.app({
       },
       {
         "pagePath": "pages/we/index",
-        "text": "我们"
+        "text": "生活"
       }
     ]
   },

@@ -95,8 +95,8 @@
           canIUse: wx.canIUse('button.open-type.getUserInfo')
         },
 
-        onLoad: function () {
-          if (app.$wepy) {
+        onShow: function () {
+          if (app.$wepy && app.$wepy.userInfo) {
             app.userInfo = app.$wepy.userInfo
             this.userInfo = app.$wepy.userInfo
             this.hasUserInfo = true
@@ -160,11 +160,10 @@
 </script>
 <config>
 {
-    navigationBarTitleText: '说说',
+    navigationBarTitleText: '生活',
     navigationBarBackgroundColor: '#fa689a',
     usingComponents: {
-      avatar: '../../components/avatar',
-      "slide-view": "module:miniprogram-slide-view",
+      avatar: '../../components/avatar'
     }
 }
 </config>

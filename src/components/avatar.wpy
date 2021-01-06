@@ -14,11 +14,11 @@
   
   .userinfo-button {
     background-color: transparent;
-    color: #333;
+    color: #666;
   }
 
   .userinfo-nickname {
-    color: #aaa;
+    color: #666;
   }
 </style>
 <template>

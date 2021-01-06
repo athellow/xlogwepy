@@ -19,6 +19,9 @@
   button{
     margin-top: 30rpx;
     margin-bottom: 30rpx;
+    background-color: #f02068;
+    border-radius: 50%;
+    color: #fff;
   }
   .button-sp-area{
     margin: 0 auto;
@@ -38,7 +41,7 @@
     <text class="info" wx:if="{{info}}">{{info}}</text>
     <!-- <image wx:else class="info loading" src="../../resources/assets/loading.gif"/> -->
     <view class="button-sp-area">
-      <button @tap="add()" class="mini-btn" type="primary" size="mini">+</button>
+      <button @tap="add()" class="mini-btn" size="mini">+</button>
     </view>
   </view>
 </template>
@@ -63,13 +66,18 @@
         },
 
         onLoad: function () {
-          // if (app.$wepy) {
-          //   this.userInfo = app.$wepy.userInfo
-          // }
           wx.showLoading({
               title: '加载中'
           })
           this.loadList()
+        },
+
+        onShow: function () {
+          if (app.$wepy && app.$wepy.userInfo) {
+            this.userInfo = app.$wepy.userInfo
+          } else if (app.userInfo) {
+            this.userInfo =  app.userInfo
+          }
         },
 
         onPullDownRefresh: function () {
@@ -126,10 +134,9 @@
 </script>
 <config>
 {
-    navigationBarTitleText: '说说',
+    navigationBarTitleText: '动态',
     usingComponents: {
-      "ilog-card": '../../components/ilog-card',
-      "slide-view": "module:miniprogram-slide-view",
+      "ilog-card": '../../components/ilog-card'
     }
 }
 </config>
