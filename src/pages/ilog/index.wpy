@@ -34,7 +34,7 @@
     <view class="cards-area">
       <view wx:for="{{ilogs}}">
         <view wx:if="{{item.id}}">
-          <ilog-card :user_name="userInfo.nickName" :avatar="userInfo.avatarUrl" :date="item.published_at" :praise_num="item.praise_num" :content="item.content" :images="item.images"/>
+          <ilog-card :user_name="item.wechat_name" :avatar="item.wechat_avatar" :date="item.published_at" :praise_num="item.praise_num" :content="item.content" :images="item.images"/>
         </view>
       </view>
     </view>
@@ -105,8 +105,13 @@
 
         methods: {
             loadList: function () {
+              var userid = wx.getStorageSync('userId');
+              if (userid == '') {
+                return;
+              }
+
               wx.request({
-                url: `https://athello.cn/api/v1/ilogs?page=${this.currentPage}`,
+                url: `https://athello.cn/api/v1/ilogs?user_id=${userid}&page=${this.currentPage}`,
                 success: (res) => {
                   if (res.data.status === 0) {
                     if (res.data.data.length == 0) {
