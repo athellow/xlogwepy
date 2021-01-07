@@ -27,7 +27,7 @@
       canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
 
-    onLoad: function () {
+    onShow: function () {
       var userInfo = wx.getStorageSync('userInfo');
       if (userInfo) {
         this.userInfo = userInfo
