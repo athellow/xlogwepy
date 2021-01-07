@@ -28,7 +28,11 @@
     },
 
     onLoad: function () {
-      if (app.$wepy && app.$wepy.userInfo) {
+      var userInfo = wx.getStorageSync('userInfo');
+      if (userInfo) {
+        this.userInfo = userInfo
+        this.hasUserInfo = true
+      } else if (app.$wepy && app.$wepy.userInfo) {
         this.userInfo = app.$wepy.userInfo
         this.hasUserInfo = true
       } else {

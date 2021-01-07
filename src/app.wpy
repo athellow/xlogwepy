@@ -106,6 +106,7 @@ wepy.app({
                           if (res.data.status == 0) {
                             wx.setStorageSync("token", res.data.data.token);
                             wx.setStorageSync("userId", res.data.data.user_id);
+                            wx.setStorageSync("userInfo", res.data.data);
                             resolve(res.data);  // promise机制放回成功数据
                           } else {
                             reject(res.data);

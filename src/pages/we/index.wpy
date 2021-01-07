@@ -96,17 +96,19 @@
         },
 
         onShow: function () {
-          var userid = wx.getStorageSync('userId');
-          if (userid == '') {
+          var userInfo = wx.getStorageSync('userInfo');
+          
+          if (userInfo) {
+            this.userInfo = userInfo
+            this.hasUserInfo = true
+          } else if (app.$wepy && app.$wepy.userInfo) {
+            this.userInfo = app.$wepy.userInfo
+            this.hasUserInfo = true
+          } else {
             app.$wepy.userLogin().then(res => {
               this.userInfo =  res.data
               this.hasUserInfo = true
             })
-          } else {
-            if (app.$wepy && app.$wepy.userInfo) {
-              this.userInfo = app.$wepy.userInfo
-              this.hasUserInfo = true
-            }
           }
         },
 
