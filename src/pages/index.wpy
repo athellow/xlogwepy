@@ -28,18 +28,14 @@
     },
 
     onLoad: function () {
-      if (this.hasUserInfo == false) {
-        app.$wepy.userLogin().then(res => {
-          if (res.status == 0) {
-            this.userInfo =  res.data
-            this.hasUserInfo = true
-          }
-        })
+      if (app.$wepy && app.$wepy.userInfo) {
+        this.userInfo = app.$wepy.userInfo
+        this.hasUserInfo = true
       } else {
-        if (app.userInfo) {
-          this.userInfo =  app.userInfo
+        app.$wepy.userLogin().then(res => {
+          this.userInfo =  res.data
           this.hasUserInfo = true
-        }
+        })
       }
       
       // if (app.userInfo) {

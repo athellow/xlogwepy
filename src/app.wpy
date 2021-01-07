@@ -85,48 +85,47 @@ wepy.app({
         wx.login({
           success: res => {
             var code = res.code
+            if (!code) {
+              reject("code error!");
+            }
+            
             // 发送 res.code 到后台换取 openId, sessionKey, unionId
-            if (code) {
-              wx.getSetting({
-                success: res => {
-                  if (res.authSetting['scope.userInfo']) {
-                    // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-                    wx.getUserInfo({
-                      success: res => {
-                        // 可以将 res 发送给后台解码出 unionId
-                        this.userInfo = res.userInfo;
-                        wx.request({
-                          url: 'https://athello.cn/api/v1/user',
-                          method: 'post',
-                          data: {encryptedData: res.encryptedData, iv: res.iv, code: code},
-                          success: res => {
-                            if (res.data.status == 0) {
-                              wx.setStorageSync("token", res.data.data.token);
-                              wx.setStorageSync("userId", res.data.data.user_id);
-                              resolve(res.data);  // promise机制放回成功数据
-                            } else {
-                              reject('error');
-                              wx.showToast({
-                                title: 'error'
-                              })
-                            }
-                          },
-                          fail: function(res) {
-                            reject(res);
+            wx.getSetting({
+              success: res => {
+                if (res.authSetting['scope.userInfo']) {
+                  // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+                  wx.getUserInfo({
+                    success: res => {
+                      // 可以将 res 发送给后台解码出 unionId
+                      this.userInfo = res.userInfo;
+                      wx.request({
+                        url: 'https://athello.cn/api/v1/user',
+                        method: 'post',
+                        data: {encryptedData: res.encryptedData, iv: res.iv, code: code},
+                        success: res => {
+                          if (res.data.status == 0) {
+                            wx.setStorageSync("token", res.data.data.token);
+                            wx.setStorageSync("userId", res.data.data.user_id);
+                            resolve(res.data);  // promise机制放回成功数据
+                          } else {
+                            reject(res.data);
                             wx.showToast({
-                              title: '系统错误'
+                              title: res.data.msg
                             })
                           }
-                        })
-                      }
-                    })
-                  }
+                        },
+                        fail: function(res) {
+                          reject(res);
+                          wx.showToast({
+                            title: '系统错误'
+                          })
+                        }
+                      })
+                    }
+                  })
                 }
-              })
-              
-            } else {
-              reject("error");
-            }
+              }
+            })
           }
         })
       })

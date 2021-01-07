@@ -91,18 +91,22 @@
     wepy.page({
         data: {
           userInfo: {"avatarUrl": "../../static/images/avatar001.jpg"},
-          hasUserInfo: app.hasUserInfo,
+          hasUserInfo: false,
           canIUse: wx.canIUse('button.open-type.getUserInfo')
         },
 
         onShow: function () {
-          if (app.$wepy && app.$wepy.userInfo) {
-            app.userInfo = app.$wepy.userInfo
-            this.userInfo = app.$wepy.userInfo
-            this.hasUserInfo = true
-          } else if (app.userInfo) {
-            this.userInfo =  app.userInfo,
-            this.hasUserInfo = true
+          var userid = wx.getStorageSync('userId');
+          if (userid == '') {
+            app.$wepy.userLogin().then(res => {
+              this.userInfo =  res.data
+              this.hasUserInfo = true
+            })
+          } else {
+            if (app.$wepy && app.$wepy.userInfo) {
+              this.userInfo = app.$wepy.userInfo
+              this.hasUserInfo = true
+            }
           }
         },
 
@@ -128,14 +132,9 @@
                 })
             },
             getUserInfo (e) {
-              app.userInfo = e.$wx.detail.userInfo
-              this.userInfo = e.$wx.detail.userInfo,
-              this.hasUserInfo = true
               app.$wepy.userLogin().then(res => {
-                if (res.status == 0) {
-                  // this.userInfo =  res.data
-                  // this.hasUserInfo = true
-                }
+                this.userInfo = res.data
+                this.hasUserInfo = true
               })
             },
             bindViewTap: function(e) {
